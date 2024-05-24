@@ -16,6 +16,7 @@ class Database:
             self.BaseballData = BaseballData
 
         self.collection = self.db["matchup-statistics"]
+        self.collection_hardMode = self.db["matchup-statistics-hardmode"]
         self.share_collection = self.db["shared-grids"]
     
     def __normalize_team_names(self, teams: tuple[str, str]) -> str:
@@ -26,7 +27,7 @@ class Database:
         return player.lower().replace(" ", "").replace(".", "") + id
     
     def __get_id(self, player: str):
-        return player[-6:]
+        return player[-36:] # ASSUMING that scryfall ids are 36 characters long
 
     def __matchup(self, teams: tuple[str, str], player: str) -> str:
         template = {
@@ -108,13 +109,16 @@ class Database:
         if data:
                 top_player = max(data["players"], key=lambda x: self.key_function(x, data))
                 if "un_normalized_name" in data["players"][top_player]:
+                #if data: # temp bypass
                     top_player_name = data["players"][top_player]["un_normalized_name"]
                     top_player_id = self.__get_id(top_player)
                     top_player_rarity = await self.calculate_rarity_score(teams, top_player_name, top_player_id)
                     top_player_picture = self.BaseballData.get_player_picture(id=top_player_id)
                     return {"name": top_player_name, "picture": top_player_picture, "rarity_score": top_player_rarity}
-                return 0
-        return 0
+                
+                #return 0
+        #return 0
+        return {"name": 'NA', "picture": 'https://cards.scryfall.io/border_crop/front/a/a/aaee15d7-db3d-4aa2-ab04-b883ff41d12a.jpg?1684581897', "rarity_score": 10}
     
     async def add_player_name(self, matchup: str, name: str):
         await self.collection.update_one({"team_combination": matchup}, {"$set": {f"players.{self.__normalize_player_name(name)}.un_normalized_name": name}})
@@ -122,36 +126,23 @@ class Database:
     @staticmethod
     def unnormalize_team_names(normalized_string: str) -> tuple[str, str]:
         mlb_teams = [
-            "Baltimore Orioles",
-            "Boston Red Sox",
-            "New York Yankees",
-            "Tampa Bay Rays",
-            "Toronto Blue Jays",
-            "Chicago White Sox",
-            "Cleveland Guardians",
-            "Detroit Tigers",
-            "Kansas City Royals",
-            "Minnesota Twins",
-            "Houston Astros",
-            "Los Angeles Angels",
-            "Oakland Athletics",
-            "Seattle Mariners",
-            "Texas Rangers",
-            "Atlanta Braves",
-            "Miami Marlins",
-            "New York Mets",
-            "Philadelphia Phillies",
-            "Washington Nationals",
-            "Chicago Cubs",
-            "Cincinnati Reds",
-            "Milwaukee Brewers",
-            "Pittsburgh Pirates",
-            "St. Louis Cardinals",
-            "Arizona Diamondbacks",
-            "Colorado Rockies",
-            "Los Angeles Dodgers",
-            "San Diego Padres",
-            "San Francisco Giants",
+            'neo',
+            'Colorless',
+            'White',
+            'Blue',
+            'Black',
+            'Red',
+            'Green',
+            'Azorius',
+            'Orzhov',
+            'Boros',
+            'Selesnya',
+            'Dimir',
+            'Izzet',
+            'Simic',
+            'Rakdos',
+            'Golgari',
+            'Gruul'
         ]
 
         for i, team1 in enumerate(mlb_teams):

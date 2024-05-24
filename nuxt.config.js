@@ -1,9 +1,10 @@
 const path = require('path')
-
+const env = "dev";
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  modules: ['@formkit/auto-animate/nuxt'],
   head: {
-    title: 'Infinite Baseball Grid',
+    title: 'Infinite MTG Grid',
     htmlAttrs: {
       lang: 'en'
     },
@@ -59,16 +60,19 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/google-analytics'
+    '@nuxtjs/google-analytics',
+    '@morev/vue-transitions/nuxt'
   ],
-
+  vueTransitions: {
+    // The same options as in the plugin itself.
+    // You will get an autocomplete using Nuxt 3.
+  },
   googleAnalytics: {
     id: 'G-G9XV3ZYH0B'
   },
 
   target: 'static',
   buildDir: 'dist',
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extend(config, { isDev, isClient }) {

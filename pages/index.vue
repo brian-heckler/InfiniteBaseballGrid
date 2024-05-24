@@ -4,10 +4,13 @@
     <virtual-panhandle />
     <top-menu />
     <game-grid :class="$style.grid" />
+    <game-grid-hard :class="$style.grid" />
     <SearchDialog />
+    <SearchDialogHard />
     <welcome-screen />
     <share-popup />
     <end-game />
+    <end-game-hard />
   </div>
 </template>
 

@@ -7,7 +7,9 @@
       <h2 :class="$style.text" style="margin-top: 5%;"><u>Top Answers:</u></h2>
       <!-- Top Logos -->
       <div :class="$style.grid">
-        <div></div> <!-- Empty grid cell -->
+        <div v-if="topLogos.length > 0" :class="[$style['label-container'], $style['top-label']]">
+          <i :class="hardLogos[0]"></i>
+        </div>
         <div v-if="topLogos.length > 0" :class="[$style['label-container'], $style['top-label']]">
           <i :class="topLogos[0][0]"></i>
         </div>
@@ -136,7 +138,7 @@
 
 .imageContainer {
   flex-direction: column;
-  background-color: #383842;
+  background-color: #4A303F;
 }
 
 .label-container {
@@ -195,15 +197,6 @@
   padding: 2px 3px;
 }
 
-.team-text {
-        padding-top: 20%;
-        font-size: 100%; /* Adjust to your preference */
-        color: white;
-        text-align: center;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 700;
-}
-
 .player-image {
   grid-column: span 1;
   width: 50%;
@@ -257,11 +250,12 @@ export default {
     }
   },
   created () {
-    EventBus.$on('game-over', async () => {
-      this.topLogos = this.$store.state.grid[0]
-      this.leftLogos = this.$store.state.grid[1]
+    EventBus.$on('game-over-hard', async () => {
+      this.topLogos = this.$store.state.gridhard[0]
+      this.leftLogos = this.$store.state.gridhard[1]
+      this.hardLogos = this.$store.state.gridhard[2]
       this.gameOver = true
-      const { data } = await this.$axios.post('/get_top_players', { grid: this.$store.state.grid })
+      const { data } = await this.$axios.post('/get_top_players', { grid: this.$store.state.gridhard })
       console.log(data)
       this.topAnswersGrid = data
     })

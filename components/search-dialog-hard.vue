@@ -4,6 +4,7 @@
           <div class="label-container top-label">
             <i :class="team1icon"></i>
             <i :class="team2icon"></i>
+            <i :class="team3icon"></i>
           </div>
           <div class='relative' v-on-clickaway='hideSearch'>
               <input
@@ -34,15 +35,17 @@ import { debounce } from 'lodash'
 import { EventBus } from '~/event-bus.js'
 
 export default {
-  name: 'game-grid',
+  name: 'game-grid-hard',
   mixins: [clickaway],
   data () {
     return {
       teams: '',
       team1: '',
       team2: '',
+      team3: '',
       team1icon: '',
       team2icon: '',
+      team3icon: '',
       searchTerm: '',
       showDropdown: false,
       searchResults: [],
@@ -52,62 +55,80 @@ export default {
     }
   },
   created () {
-    EventBus.$on('show-search', () => {
+    EventBus.$on('show-search-hard', () => {
       this.teams = this.$store.state.grid
       switch (this.$store.state.selectedGridLocation) {
         case 's00':
           this.team1 = this.teams[0][0][1]
           this.team2 = this.teams[1][0][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][0][0]
           this.team2icon = this.teams[1][0][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's01':
           this.team1 = this.teams[0][1][1]
           this.team2 = this.teams[1][0][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][1][0]
           this.team2icon = this.teams[1][0][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's02':
           this.team1 = this.teams[0][2][1]
           this.team2 = this.teams[1][0][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][2][0]
           this.team2icon = this.teams[1][0][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's10':
           this.team1 = this.teams[0][0][1]
           this.team2 = this.teams[1][1][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][0][0]
           this.team2icon = this.teams[1][1][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's11':
           this.team1 = this.teams[0][1][1]
           this.team2 = this.teams[1][1][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][1][0]
           this.team2icon = this.teams[1][1][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's12':
           this.team1 = this.teams[0][2][1]
           this.team2 = this.teams[1][1][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][2][0]
           this.team2icon = this.teams[1][1][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's20':
           this.team1 = this.teams[0][0][1]
           this.team2 = this.teams[1][2][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][0][0]
           this.team2icon = this.teams[1][2][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's21':
           this.team1 = this.teams[0][1][1]
           this.team2 = this.teams[1][2][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][1][0]
           this.team2icon = this.teams[1][2][0]
+          this.team3icon = this.teams[2][0]
           break
         case 's22':
           this.team1 = this.teams[0][2][1]
           this.team2 = this.teams[1][2][1]
+          this.team3 = this.teams[2][1]
           this.team1icon = this.teams[0][2][0]
           this.team2icon = this.teams[1][2][0]
+          this.team3icon = this.teams[2][0]
           break
       }
       this.showSearch = true
@@ -153,8 +174,8 @@ export default {
       this.$store.commit('clearAllOnExit')
     },
     playerClicked (player) {
-      this.$store.commit('setSelectedPlayerEasy', player)
-      EventBus.$emit('player-selected')
+      this.$store.commit('setSelectedPlayerHard', player)
+      EventBus.$emit('player-selectedhard')
     }
   }
 }

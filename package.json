@@ -12,15 +12,20 @@
     "lintfix": "npm run lint:js -- --fix"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@gtm-support/vue2-gtm": "^2.0.0",
+    "@morev/vue-transitions": "^3.0.2",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/google-analytics": "^2.4.0",
     "@vercel/analytics": "^1.0.1",
     "core-js": "^3.25.3",
     "js-cookie": "^3.0.5",
+    "keyrune": "^3.14.0",
+    "mana-font": "^1.15.9",
     "nuxt": "^2.17.0",
     "vue": "^2.7.10",
     "vue-clickaway": "^2.2.2",
+    "vue-js-popover": "^1.2.1",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
     "webpack": "^4.46.0"

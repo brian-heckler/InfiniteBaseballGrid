@@ -7,22 +7,36 @@ const createStore = () => {
   return new Vuex.Store({
     state: {
       selectedGridLocation: null,
-      selectedPlayer: null,
-      grid: null
+      selectedGridLocationHard: null,
+      selectedPlayerEasy: null,
+      selectedPlayerHard: null,
+      grid: null,
+      gridhard: null
     },
     mutations: {
       setSelectedGridLocation (state, item) {
         state.selectedGridLocation = item
       },
-      setSelectedPlayer (state, item) {
-        state.selectedPlayer = item
+      setSelectedGridLocationHard (state, item) {
+        state.selectedGridLocationHard = item
+      },
+      setSelectedPlayerEasy (state, item) {
+        state.selectedPlayerEasy = item
+      },
+      setSelectedPlayerHard (state, item) {
+        state.selectedPlayerHard = item
       },
       clearAllOnExit (state) {
         state.selectedGridLocation = null
-        state.selectedPlayer = null
+        state.selectedGridLocationHard = null
+        state.selectedPlayerEasy = null
+        state.selectedPlayerHard = null
       },
       setGrid (state, item) {
         state.grid = item
+      },
+      setGridHard (state, item) {
+        state.gridhard = item
       }
     }
   })

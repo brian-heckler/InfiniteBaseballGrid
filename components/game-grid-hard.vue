@@ -1,7 +1,10 @@
 <template>
-  <div v-if="hardMode == false">
+  <div v-if="hardMode == true">
     <div :class="$style.grid">
-        <div></div> <!-- Empty grid cell -->
+        <div v-if="teams.length > 0 && teams[0].length > 0" :class="$style['label-container-hard']">
+            <i v-if="isVisible" :class="teams[2][0]"></i>
+            <div v-if="isVisible" :class="$style['hard-text']">{{ teams[2][1] }}</div>
+        </div>
         <div v-if="teams.length > 0 && teams[0].length > 0" :class="[$style['label-container'], $style['top-label']]">
             <i :class="teams[0][0][0]"></i>
             <div :class="$style['team-text']">{{ teams[0][0][1] }}</div>
@@ -106,7 +109,7 @@
         <button v-else :class="$style.giveUp" @click="giveUp()">Give Up</button>
     </div>
     <div :class="$style.unlimitedMode">
-      <button v-if="hardMode == false" @click="hardModegame()" :class="$style.hardModeButton">Hard Mode</button>
+      <button v-if="hardMode == true" @click="easyModegame()" :class="$style.hardModeButton">Classic Mode</button>
       <button v-if="unlimitedMode == false" @click="unlimitedMode = true" :class="$style.unlimitedModeButton">Unlimited Mode</button>
     </div>
   </div>
@@ -154,6 +157,7 @@
             margin: auto !important; /* Center the grid */
         }
     }
+
     .giveUp {
       grid-column: 5 5;
       width: 90%;
@@ -198,28 +202,28 @@
       padding: 5%;
   }
 
-  .unlimitedModeButton:hover {
-        background-color: #009800; /* Adjust as needed */
-  }
+    .unlimitedModeButton:hover {
+          background-color: #009800; /* Adjust as needed */
+    }
 
-  .hardModeButton {
-      width: 100%;
-      height: 100%;
-      border-radius: 15px;
-      background-color: #790146; /* You can adjust this color */
-      color: white;
-      font-family: 'Roboto', sans-serif;
-      font-weight: 700;
-      font-size: 20px;
-      border: none;
-      cursor: pointer;
-      margin-right: 10px;
-      padding: 5%;
-  }
+    .hardModeButton {
+        width: 100%;
+        height: 100%;
+        border-radius: 15px;
+        background-color: #014679; /* You can adjust this color */
+        color: white;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        border: none;
+        cursor: pointer;
+        margin-right: 10px;
+        padding: 5%;
+    }
 
-  .hardModeButton:hover {
-        background-color: #600137; /* Adjust as needed */
-  }
+    .hardModeButton:hover {
+          background-color: #013760; /* Adjust as needed */
+    }
 
     .share-button-container {
         display: flex;
@@ -295,10 +299,17 @@
       align-items: center;
       width: 100%;
       height: 100%;
-      background-color: #383842;
+      background-color: #4A303F;
     }
 
     .label-container {
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .label-container-hard {
         display: flex;
         justify-content:center;
         align-items: center;
@@ -340,7 +351,7 @@
         aspect-ratio: 5 / 7;
         padding: 10%;
         border: none;
-        background-color: #383842;
+        background-color: #4A303F;
         /* Other styles... */
     }
 
@@ -381,6 +392,15 @@
         font-weight: 700;
     }
 
+    .hard-text {
+        padding-top: 5%;
+        font-size: 100%; /* Adjust to your preference */
+        color: white;
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+    }
+
     .small-text {
         padding-top: 25%;
         font-size: 70%; /* Adjust to your preference */
@@ -404,7 +424,7 @@
 </style>
 
 <style>
-  .fade-leave-active {
+  .fade-enter-active, .fade-leave-active {
     transition: all 2s;
   }
   .fade-enter-from, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
@@ -448,33 +468,37 @@ export default {
     async buttonClicked (buttonID) {
       console.log('Button clicked. Emitting event...')
       await this.$store.commit('setSelectedGridLocation', buttonID)
-      EventBus.$emit('show-search')
+      EventBus.$emit('show-search-hard')
     },
     newGame () {
       parent.location.reload()
     },
-    hardModegame () {
+    easyModegame () {
       this.isVisible = !this.isVisible
+      this.hardMode = false
+      EventBus.$emit('show-easyMode')
+    },
+    hardModegame () {
       EventBus.$emit('show-hardMode')
-      this.hardMode = true
+      this.isVisible = !this.isVisible
     },
     shareGrid () {
       EventBus.$emit('show-share-popup')
       console.log('emitted share popup')
     },
     goToStats () {
-      EventBus.$emit('game-over')
+      EventBus.$emit('game-over-hard')
     },
     giveUp () {
       this.gameOver = true
-      EventBus.$emit('game-over')
+      EventBus.$emit('game-over-hard')
       this.guesses = 0
     }
   },
   async created () {
-    EventBus.$on('show-easyMode', () => {
+    EventBus.$on('show-hardMode', () => {
       this.isVisible = !this.isVisible
-      this.hardMode = false
+      this.hardMode = true
     })
     let data = ''
     if (this.$route.query.id !== undefined) {
@@ -484,9 +508,10 @@ export default {
       data = await this.$axios.get('/get_new_grid')
       this.teams = data.data
     }
-    this.$store.commit('setGrid', data.data)
-    EventBus.$on('player-selected', async () => {
-      const playerData = this.$store.state.selectedPlayerEasy
+    this.teams = this.$store.state.grid
+    this.$store.commit('setGridHard', this.teams)
+    EventBus.$on('player-selectedhard', async () => {
+      const playerData = this.$store.state.selectedPlayerHard
       const player = playerData.split('|')[0].trim()
       const start = ''
       const end = ''
@@ -564,11 +589,11 @@ export default {
       this.guesses--
       if (this.guesses === 0 && this.unlimitedMode === false) {
         this.gameOver = true
-        EventBus.$emit('game-over')
+        EventBus.$emit('game-over-hard')
       }
       if (this.gridStatus.s00 !== false && this.gridStatus.s01 !== false && this.gridStatus.s02 !== false && this.gridStatus.s10 !== false && this.gridStatus.s11 !== false && this.gridStatus.s12 !== false && this.gridStatus.s20 !== false && this.gridStatus.s21 !== false && this.gridStatus.s22 !== false && this.unlimitedMode === true) {
         this.gameOver = true
-        EventBus.$emit('game-over')
+        EventBus.$emit('game-over-hard')
       }
     })
   }

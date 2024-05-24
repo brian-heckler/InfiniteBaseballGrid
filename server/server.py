@@ -5,10 +5,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 load_dotenv()
 
-database_connection_string = os.getenv("DB_CONNECTION_STRING")
+#database_connection_string = os.getenv("DB_CONNECTION_STRING")
+database_connection_string = os.getenv("mongodb+srv://bheckler24:dyEtBbNrv1YFmoqk@magic-doku.gzi2n0j.mongodb.net/?retryWrites=true&w=majority&appName=magic-doku")
 dev_ip = os.getenv("DEV_IP")
 
-dev = False
+dev = True
 if dev:
     from GameCategories import GameCategories
     from BaseballData import BaseballData
@@ -19,7 +20,7 @@ else:
     from server.Database import Database
 import datetime
 
-mongo_client = AsyncIOMotorClient(database_connection_string)
+mongo_client = AsyncIOMotorClient('mongodb+srv://bheckler24:dyEtBbNrv1YFmoqk@magic-doku.gzi2n0j.mongodb.net/?retryWrites=true&w=majority&appName=magic-doku')
 db: Database = Database(mongo_client, dev)
 
 app = Quart(__name__)
@@ -49,6 +50,11 @@ async def get_new_grid():
     categories: GameCategories = GameCategories()
     return jsonify(categories.get_grid())
 
+@app.route("/get_current_grid", methods=["GET"])
+async def get_current_grid():
+    categories: GameCategories = GameCategories()
+    return jsonify(categories.get_grid())
+
 @app.route("/search_players", methods=["GET"])
 async def search_players():
     query: str = request.args.get("name")
@@ -62,15 +68,23 @@ async def search_players():
             start: str = ''
             end: str = ''
             try:
-                if data[x]['active']:
-                    start = data[x]['mlbDebutDate'][:4]
-                    end = datetime.datetime.now().year
+                if data[x]['reprint']:
+                    #original_printing = await BaseballData.search_reprints(data[x])
+                    #start = original_printing['released_at'][:4] # reprint date
+                    #end = data[x]['released_at'][:4] # most recent print date
+                    start = ''
+                    end = ''
+                    #start = data[x]['released_at'][:4]
+                    #end = datetime.datetime.now().year
                 else:
-                    start = data[x]['mlbDebutDate'][:4]
-                    end = data[x]['lastPlayedDate'][:4]
-                players.append(data[x]["fullName"] + f" | ({start}-{end})")
+                    #start = data[x]['released_at'][:4]
+                    #end = data[x]['released_at'][:4]
+                    start = ''
+                    end = ''
+                #players.append(data[x]["name"] + f" | ({start}-{end})") 
+                players.append(data[x]["name"])
             except KeyError:
-                players.append(data[x]["fullName"])
+                players.append(data[x]["name"])
         return jsonify(players)
     return jsonify([])
 
@@ -79,31 +93,51 @@ async def validate_player():
     query = request.args.get("name")
     team1 = request.args.get("team1")
     team2 = request.args.get("team2")
+    hardMode = request.args.get("hardMode")
+    team3 = request.args.get("team3") # hardmode category
     start = request.args.get("start")
     end = request.args.get("end")
     players = await BaseballData.search_players(query)
     player = ''
     if len(players) > 1:
         for x in range(len(players)):
-            if players[x]["fullName"] == query:
+            if players[x]["name"] == query:
                 try:
-                    if players[x]['active']:
-                        if start == players[x]['mlbDebutDate'][:4]:
+                    if players[x]['reprint']:
+                        if start == players[x]['released_at'][:4]:
                             player = players[x]
                     else:
-                        if start == players[x]['mlbDebutDate'][:4] and end == players[x]['lastPlayedDate'][:4]:
+                        if start == players[x]['released_at'][:4] and end == players[x]['released_at'][:4]:
                             player = players[x]
                 except KeyError:
                     continue
     else: player = players[0]
     teams = BaseballData.get_player_teams(player)
+    if player["reprint"]:
+        reprint_sets = await BaseballData.search_reprints(player)
+        for set in reprint_sets:
+            if set not in teams:
+                teams.append(BaseballData._BaseballData__get_old_set_names(set))
+        #teams.extend(BaseballData._BaseballData__get_old_set_names(reprint_sets))
+        #teams.append(original_printing["set_name"])
     if teams:
-        if team1 in teams and team2 in teams:
+        #if team1 in teams and team2 in teams:
+        if hardMode == 'true' and team1 in teams and team2 in teams and team3 in teams: # temp code to accept any entry
             picture = BaseballData.get_player_picture(player)
-            name = player["fullName"]
-            id = player['link'].split('/')[-1]
+            name = player["name"]
+            id = player['id'] #.split('/')[-1]
             await db.update_matchup(teams=(team1, team2), player=name, id=id)
             rarity_score = await db.calculate_rarity_score(teams=(team1, team2), player=name, id=id)
+            #rarity_score = 95 # placeholder value
+            return jsonify({"picture": picture, "name": name, "rarity_score": rarity_score})
+        
+        if hardMode == 'false' and team1 in teams and team2 in teams: # temp code to accept any entry
+            picture = BaseballData.get_player_picture(player)
+            name = player["name"]
+            id = player['id'] #.split('/')[-1]
+            await db.update_matchup(teams=(team1, team2), player=name, id=id)
+            rarity_score = await db.calculate_rarity_score(teams=(team1, team2), player=name, id=id)
+            #rarity_score = 95 # placeholder value
             return jsonify({"picture": picture, "name": name, "rarity_score": rarity_score})
     # return nothing
     return jsonify({})
