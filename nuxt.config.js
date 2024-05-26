@@ -1,5 +1,4 @@
 const path = require('path')
-const env = "dev";
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   modules: ['@formkit/auto-animate/nuxt'],
