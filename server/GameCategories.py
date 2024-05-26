@@ -73,9 +73,8 @@ class GameCategories:
             top.append(choice)
             # Second choice (rows)
             #choice = random.choice(self.choices_sets)
-            random_set_code = random.choice(list(BaseballData.set_dict.keys()))
-            random_set_name = BaseballData.set_dict[random_set_code]
-            choice = (f"ss ss-{random_set_code} ss-rare ss-grad ss-5x", random_set_name, set_tooltip)
+            # Add the easy category
+            choice = (random.choice(self.choices_easy))
             while choice in top or choice in bottom:
                 #choice = random.choice(self.choices_sets)
                 random_set_code = random.choice(list(BaseballData.set_dict.keys()))
@@ -84,16 +83,22 @@ class GameCategories:
 
             bottom.append(choice)
 
+        # Add a single Set game category
         random_index = random.randint(0, len(bottom) - 1)
-        random_choice_from_names = random.choice(self.choices_name)
-        bottom[random_index] = random_choice_from_names
+        random_set_code = random.choice(list(BaseballData.set_dict.keys()))
+        random_set_name = BaseballData.set_dict[random_set_code]
+        choice = (f"ss ss-{random_set_code} ss-rare ss-grad ss-5x", random_set_name, set_tooltip)
+        bottom[random_index] = choice
 
+        # Add the name category
         random_index = random.randint(0, len(bottom) - 1)
-        random_choice_from_easy = random.choice(self.choices_easy)
-        bottom[random_index] = random_choice_from_easy
+        choice = random.choice(self.choices_name)
+        bottom[random_index] = choice
 
+        # Add the hardmode category
         hardmode = random.choice(self.choices_hardmode)
         while hardmode in top or hardmode in bottom:
+        #while any(hardmode[1][0:4] == item[1][0:4] for item in top if isinstance(item, tuple)) or any(hardmode[1][0:4] == item[1] for item in bottom if isinstance(item, tuple)):
             hardmode = random.choice(self.choices_hardmode)
         
         categories.append(top)
