@@ -401,7 +401,7 @@ class BaseballData:
         #     teams.append(BaseballData.__get_old_team_names("C"))
         # else:
         color_combinations = []
-        if 'color' in player: # some cards don't have a colors field
+        if 'colors' in player: # some cards don't have a colors field
             for r in range(1, len(player["colors"]) + 1):
                 color_combinations.extend([''.join(comb) for comb in combinations(player["colors"], r)])    
             if len(color_combinations)>0:

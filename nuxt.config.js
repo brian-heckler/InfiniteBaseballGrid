@@ -26,7 +26,8 @@ export default {
         type: 'text/javascript',
         charset: 'utf-8'
       }
-    ]
+    ],
+    plugins: [{ src: '~/plugins/v-tooltip.js', mode: 'client' }]
   },
 
   server: {

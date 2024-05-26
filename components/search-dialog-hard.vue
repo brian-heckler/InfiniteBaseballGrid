@@ -2,9 +2,24 @@
     <div class='search-wrapper' v-if='showSearch'>
       <div id='headlessui-dialog-panel' class='search-dialog relative mx-auto max-w-xl transform divide-y divide-gray-100 dark:divide-gray-800 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all'>
           <div class="label-container top-label">
-            <i :class="team1icon"></i>
-            <i :class="team2icon"></i>
-            <i :class="team3icon"></i>
+            <VDropdown :theme="'info-dropdown-hover'">
+              <i :class="team3icon"></i>
+              <template #popper>
+                {{ team3 }}
+              </template>
+            </VDropdown>
+            <VDropdown :theme="'info-dropdown-hover'">
+              <i :class="team1icon"></i>
+              <template #popper>
+                {{ team1 }}
+              </template>
+            </VDropdown>
+            <VDropdown :theme="'info-dropdown-hover'">
+              <i :class="team2icon"></i>
+              <template #popper>
+                {{ team2 }}
+              </template>
+            </VDropdown>
           </div>
           <div class='relative' v-on-clickaway='hideSearch'>
               <input
@@ -184,7 +199,29 @@ export default {
 <style scoped>
 @media screen and (max-width: 768px) {
   .search-dialog {
-    width: 90% !important;
+    width: 70% !important;
+  }
+
+  .search-dialog input {
+    font-size: 14px !important;
+    width: 95% !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .search-dialog {
+    width: 60% !important;
+  }
+
+  .search-dialog input {
+    font-size: 14px !important;
+    width: 95% !important;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .search-dialog {
+    width: 40% !important;
   }
 
   .search-dialog input {
@@ -271,5 +308,31 @@ export default {
 .search-dialog .dropdown div:hover {
   background-color: #f6f6f6; /* Light hover effect */
   color: black;
+}
+</style>
+
+<style>
+.v-popper--theme-info-dropdown-hover .v-popper__inner {
+  background: rgba(56, 56, 56, 0.7);
+  color: #ffffff;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  font-size: 100%; /* Adjust to your preference */
+  color: white;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  max-width: 250px;
+}
+
+.v-popper--theme-info-dropdown-hover .v-popper__arrow-outer {
+  border-color: rgba(56, 56, 56, 0.7);
+}
+
+.v-popper--theme-info-dropdown-hover .v-popper__arrow-inner {
+  visibility: hidden;
 }
 </style>

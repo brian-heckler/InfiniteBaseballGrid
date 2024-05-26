@@ -117,7 +117,7 @@ async def validate_player():
         reprint_sets = await BaseballData.search_reprints(player)
         for set in reprint_sets:
             if set not in teams:
-                teams.append(BaseballData._BaseballData__get_old_set_names(set))
+                teams.append(BaseballData.__get_old_set_names(set))
         #teams.extend(BaseballData._BaseballData__get_old_set_names(reprint_sets))
         #teams.append(original_printing["set_name"])
     if teams:

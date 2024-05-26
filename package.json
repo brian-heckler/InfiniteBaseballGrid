@@ -19,6 +19,7 @@
     "@nuxtjs/google-analytics": "^2.4.0",
     "@vercel/analytics": "^1.0.1",
     "core-js": "^3.25.3",
+    "floating-vue": "^1.0.0-beta.19",
     "js-cookie": "^3.0.5",
     "keyrune": "^3.14.0",
     "mana-font": "^1.15.9",

@@ -27,13 +27,14 @@
 
     @media screen and (max-width: 768px) {
         .title {
-            font-size: 1rem !important;
+            font-size: 1.5rem !important;
             width: 50% !important;
             text-align: center !important;
+            margin-right: 0% !important;
         }
 
         .social-icons {
-            flex-direction: column !important;
+            flex-direction: row !important;
             align-items: last baseline !important;
         }
 
@@ -42,6 +43,7 @@
             margin-bottom: 20% !important;
         }
     }
+
     .main {
         display: flex;
         flex-direction: column;

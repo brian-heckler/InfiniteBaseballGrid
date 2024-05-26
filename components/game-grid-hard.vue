@@ -2,27 +2,57 @@
   <div v-if="hardMode == true">
     <div :class="$style.grid">
         <div v-if="teams.length > 0 && teams[0].length > 0" :class="$style['label-container-hard']">
-            <i v-if="isVisible" :class="teams[2][0]"></i>
-            <div v-if="isVisible" :class="$style['hard-text']">{{ teams[2][1] }}</div>
+          <VDropdown :theme="'info-dropdown-hover'" v-if="teams[2][2]">
+            <i :class="teams[2][0]"></i>
+            <template #popper>
+              {{ teams[2][2] }}
+            </template>
+          </VDropdown>
+          <i v-else :class="teams[2][0]"></i>
+          <div v-if="isVisible" :class="$style['hard-text']">{{ teams[2][1] }}</div>
         </div>
         <div v-if="teams.length > 0 && teams[0].length > 0" :class="[$style['label-container'], $style['top-label']]">
-            <i :class="teams[0][0][0]"></i>
+            <VDropdown :theme="'info-dropdown'" v-if="teams[0][0][2]">
+              <i :class="teams[0][0][0]"></i>
+              <template #popper>
+                {{ teams[0][0][2] }}
+              </template>
+            </VDropdown>
+            <i v-else :class="teams[0][0][0]"></i>
             <div :class="$style['team-text']">{{ teams[0][0][1] }}</div>
         </div>
         <div v-else></div> <!-- Empty grid cell -->
         <div v-if="teams.length > 0 && teams[0].length > 0" :class="[$style['label-container'], $style['top-label']]">
-            <i :class="teams[0][1][0]"></i>
+            <VDropdown :theme="'info-dropdown'" v-if="teams[0][1][2]">
+              <i :class="teams[0][1][0]"></i>
+              <template #popper>
+                {{ teams[0][1][2] }}
+              </template>
+            </VDropdown>
+            <i v-else :class="teams[0][1][0]"></i>
             <div :class="$style['team-text']">{{ teams[0][1][1] }}</div>
         </div>
         <div v-else></div> <!-- Empty grid cell -->
         <div v-if="teams.length > 0 && teams[0].length > 0" :class="[$style['label-container'], $style['top-label']]">
-            <i :class="teams[0][2][0]"></i>
+            <VDropdown :theme="'info-dropdown'" v-if="teams[0][2][2]">
+              <i :class="teams[0][2][0]"></i>
+              <template #popper>
+                {{ teams[0][2][2] }}
+              </template>
+            </VDropdown>
+            <i v-else :class="teams[0][2][0]"></i>
             <div :class="$style['team-text']">{{ teams[0][2][1] }}</div>
         </div>
         <div v-else></div> <!-- Empty grid cell -->
         <div></div> <!-- Empty grid cell -->
         <div v-if="teams.length > 1 && teams[1].length > 0" :class="$style['label-container']">
-            <i :class="teams[1][0][0]"></i>
+            <VDropdown :theme="'info-dropdown-left'" v-if="teams[1][0][2]">
+              <i :class="teams[1][0][0]"></i>
+              <template #popper>
+                {{ teams[1][0][2] }}
+              </template>
+            </VDropdown>
+            <i v-else :class="teams[1][0][0]"></i>
             <div :class="$style['team-text']">{{ teams[1][0][1] }}</div>
         </div>
         <div v-else></div> <!-- Empty grid cell -->
@@ -48,7 +78,13 @@
           <img src="~/static/share.png" alt="Share Logo" :class="$style['share-button']" />
         </div>
         <div v-if="teams.length > 1 && teams[1].length > 0" :class="$style['label-container']">
-            <i :class="teams[1][1][0]"></i>
+            <VDropdown :theme="'info-dropdown-left'" v-if="teams[1][1][2]">
+              <i :class="teams[1][1][0]"></i>
+              <template #popper>
+                {{ teams[1][1][2] }}
+              </template>
+            </VDropdown>
+            <i v-else :class="teams[1][1][0]"></i>
             <div :class="$style['team-text']">{{ teams[1][1][1] }}</div>
         </div>
         <div v-else></div> <!-- Empty grid cell -->
@@ -79,7 +115,13 @@
           <div :class="$style['large-text']">&infin;</div>
         </div>
         <div v-if="teams.length > 1 && teams[1].length > 0" :class="$style['label-container']">
-            <i :class="teams[1][2][0]"></i>
+            <VDropdown :theme="'info-dropdown-left'" v-if="teams[1][2][2]">
+              <i :class="teams[1][2][0]"></i>
+              <template #popper>
+                {{ teams[1][2][2] }}
+              </template>
+            </VDropdown>
+            <i v-else :class="teams[1][2][0]"></i>
             <div :class="$style['team-text']">{{ teams[1][2][1] }}</div>
         </div>
         <div v-else></div> <!-- Empty grid cell -->
@@ -127,37 +169,72 @@
         }
 
         .small-text {
-            font-size: 10px !important;
+            font-size: 20px !important;
         }
 
         .playerName {
-            font-size: 8px !important;
+            font-size: 14px !important;
         }
 
         .newgame {
-            font-size: 10px !important;
+            font-size: 20px !important;
+        }
+
+        .stats {
+            font-size: 20px !important;
         }
 
         .giveUp {
-            font-size: 10px !important;
+            font-size: 20px !important;
             height: 100% !important;
         }
 
         .rarityScore {
-            font-size: 8px !important;
+            font-size: 14px !important;
         }
 
         .unlimitedMode {
-            width: 40% !important;
+            width: 50% !important;
         }
     }
-    @media screen and (min-width: 1001px) {
+    @media screen and (min-width: 768px) {
         .grid {
             width: 768px !important; /* Change to whatever constant size you prefer */
             margin: auto !important; /* Center the grid */
         }
-    }
+        .large-text {
+            font-size: 30px !important;
+        }
 
+        .small-text {
+            font-size: 20px !important;
+        }
+
+        .playerName {
+            font-size: 14px !important;
+        }
+
+        .newgame {
+            font-size: 20px !important;
+        }
+
+        .stats {
+            font-size: 20px !important;
+        }
+
+        .giveUp {
+            font-size: 20px !important;
+            height: 100% !important;
+        }
+
+        .rarityScore {
+            font-size: 14px !important;
+        }
+
+        .unlimitedMode {
+            width: 15% !important;
+        }
+    }
     .giveUp {
       grid-column: 5 5;
       width: 90%;
@@ -200,13 +277,14 @@
       border: none;
       cursor: pointer;
       padding: 5%;
+      max-width: 120px;
   }
 
-    .unlimitedModeButton:hover {
-          background-color: #009800; /* Adjust as needed */
-    }
+  .unlimitedModeButton:hover {
+        background-color: #009800; /* Adjust as needed */
+  }
 
-    .hardModeButton {
+  .hardModeButton {
         width: 100%;
         height: 100%;
         border-radius: 15px;
@@ -219,6 +297,7 @@
         cursor: pointer;
         margin-right: 10px;
         padding: 5%;
+        max-width: 100px;
     }
 
     .hardModeButton:hover {
@@ -424,12 +503,81 @@
 </style>
 
 <style>
-  .fade-enter-active, .fade-leave-active {
+  .fade-leave-active {
     transition: all 2s;
   }
   .fade-enter-from, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0;
   }
+  .v-popper--theme-info-dropdown .v-popper__inner {
+    background: rgba(56, 56, 56, 0.7);
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+    font-size: 14px;
+    font-size: 100%; /* Adjust to your preference */
+    color: white;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    max-width: 250px;
+  }
+
+  .v-popper--theme-info-dropdown .v-popper__arrow-outer {
+    border-color: rgba(56, 56, 56, 0.7);
+  }
+
+  .v-popper--theme-info-dropdown .v-popper__arrow-inner {
+    visibility: hidden;
+  }
+  .v-popper--theme-info-dropdown-left .v-popper__inner {
+    background: rgba(56, 56, 56, 0.7);
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+    font-size: 14px;
+    font-size: 100%; /* Adjust to your preference */
+    color: white;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    max-width: 250px;
+  }
+
+  .v-popper--theme-info-dropdown-left .v-popper__arrow-outer {
+    border-color: rgba(56, 56, 56, 0.7);
+  }
+
+  .v-popper--theme-info-dropdown-left .v-popper__arrow-inner {
+    visibility: hidden;
+  }
+  .v-popper--theme-info-dropdown-hover .v-popper__inner {
+  background: rgba(56, 56, 56, 0.7);
+  color: #ffffff;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  font-size: 100%; /* Adjust to your preference */
+  color: white;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  max-width: 250px;
+}
+
+.v-popper--theme-info-dropdown-hover .v-popper__arrow-outer {
+  border-color: rgba(56, 56, 56, 0.7);
+}
+
+.v-popper--theme-info-dropdown-hover .v-popper__arrow-inner {
+  visibility: hidden;
+}
 </style>
 
 <style src="../node_modules/mana-font/css/mana.min.css"></style>
