@@ -35,7 +35,8 @@ async def after_request(response):
         allowed_origins = [
             "https://www.infiniteimmaculategrid.com",
             "https://www.infinitebaseballgrid.com",
-            "https://infinite-magic-grid.vercel.app"
+            "https://infinite-magic-grid.vercel.app",
+            "infinite-magic-grid-e1lysodma-brians-projects-cad6a168.vercel.app"
         ]
         
         origin = request.headers.get('Origin')
