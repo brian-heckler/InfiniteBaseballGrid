@@ -9,7 +9,7 @@ load_dotenv()
 database_connection_string = os.getenv("mongodb+srv://bheckler24:dyEtBbNrv1YFmoqk@magic-doku.gzi2n0j.mongodb.net/?retryWrites=true&w=majority&appName=magic-doku")
 dev_ip = os.getenv("DEV_IP")
 
-dev = True
+#dev = True
 if dev:
     from GameCategories import GameCategories
     from BaseballData import BaseballData
