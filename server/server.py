@@ -6,10 +6,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 load_dotenv()
 
 #database_connection_string = os.getenv("DB_CONNECTION_STRING")
-database_connection_string = os.getenv("mongodb+srv://bheckler24:dyEtBbNrv1YFmoqk@magic-doku.gzi2n0j.mongodb.net/?retryWrites=true&w=majority&appName=magic-doku")
-dev_ip = os.getenv("DEV_IP")
+database_connection_string = os.getenv("MONGODB_URI")
+#dev_ip = os.getenv("DEV_IP")
 
-dev = True
+#dev = True
 if dev:
     from GameCategories import GameCategories
     from BaseballData import BaseballData
@@ -20,7 +20,7 @@ else:
     from server.Database import Database
 import datetime
 
-mongo_client = AsyncIOMotorClient('mongodb+srv://bheckler24:dyEtBbNrv1YFmoqk@magic-doku.gzi2n0j.mongodb.net/?retryWrites=true&w=majority&appName=magic-doku')
+mongo_client = AsyncIOMotorClient(database_connection_string)
 db: Database = Database(mongo_client, dev)
 
 app = Quart(__name__)
@@ -35,8 +35,7 @@ async def after_request(response):
         allowed_origins = [
             "https://www.infiniteimmaculategrid.com",
             "https://www.infinitebaseballgrid.com",
-            "https://infinite-magic-grid.vercel.app",
-            "infinite-magic-grid-e1lysodma-brians-projects-cad6a168.vercel.app"
+            "https://infinite-magic-grid.vercel.app"
         ]
         
         origin = request.headers.get('Origin')
@@ -172,5 +171,6 @@ async def get_top_players():
                 top_players[i%3].append(player)
     return jsonify(top_players)
 
-if __name__ == '__main__':
-    app.run('0.0.0.0', debug=True)
+#if __name__ == '__main__':
+#    app.run('0.0.0.0', debug=True)
+asgi_app = app
